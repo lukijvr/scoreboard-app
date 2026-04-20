@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scoreboard Display</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <div class="display-wrap">
+    <div class="top-strip">
+      <div class="team-bar home-bar" id="homeBar"></div>
+      <div class="match-center">
+        <div class="match-label">LIVE SCOREBOARD</div>
+        <div class="timer" id="timer">20:00</div>
+        <div class="period" id="period">1st Half</div>
+      </div>
+      <div class="team-bar away-bar" id="awayBar"></div>
+    </div>
+
+    <div class="scoreboard-main">
+      <div class="team-panel">
+        <div class="logo-box">
+          <img id="homeLogo" alt="Home Logo" />
+          <div class="logo-placeholder" id="homeLogoPlaceholder">HOME LOGO</div>
+        </div>
+        <div class="team-name" id="homeTeam">Home</div>
+        <div class="score huge-score" id="homeScore">0</div>
+      </div>
+
+      <div class="center-divider">
+        <div class="vs-badge">VS</div>
+      </div>
+
+      <div class="team-panel">
+        <div class="logo-box">
+          <img id="awayLogo" alt="Away Logo" />
+          <div class="logo-placeholder" id="awayLogoPlaceholder">AWAY LOGO</div>
+        </div>
+        <div class="team-name" id="awayTeam">Away</div>
+        <div class="score huge-score" id="awayScore">0</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js?v=3"></script>
+</body>
+</html>

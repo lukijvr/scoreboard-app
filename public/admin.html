@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scoreboard Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <header class="topbar">
+      <h1>Scoreboard Admin</h1>
+      <p>Match control panel</p>
+    </header>
+
+    <section class="setup-card">
+      <h2>Match Setup</h2>
+
+      <div class="setup-grid">
+        <div class="field-group">
+          <label for="homeTeamInput">Home Team</label>
+          <input type="text" id="homeTeamInput" value="Home" />
+        </div>
+
+        <div class="field-group">
+          <label for="awayTeamInput">Away Team</label>
+          <input type="text" id="awayTeamInput" value="Away" />
+        </div>
+
+        <div class="field-group">
+          <label for="periodInput">Period</label>
+          <input type="text" id="periodInput" value="1st Half" />
+        </div>
+
+        <div class="field-group">
+          <label for="timerInput">Set Match Time</label>
+          <input type="text" id="timerInput" value="20:00" placeholder="20:00" />
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="primary-btn" onclick="updateNames()">Update Match Info</button>
+        <button class="secondary-btn" onclick="setTimer()">Set Time</button>
+        <button class="success-btn" onclick="startGame()">Start Game</button>
+        <button class="warning-btn" onclick="stopGame()">Stop Game</button>
+        <button class="danger-btn" onclick="resetScores()">Reset</button>
+      </div>
+    </section>
+
+    <section class="teams-grid">
+      <div class="team-card home-card">
+        <h2>Home Team</h2>
+
+        <div class="field-group">
+          <label for="homeColorInput">Home Color</label>
+          <input type="color" id="homeColorInput" value="#2563eb" />
+        </div>
+
+        <div class="field-group">
+          <label for="homeLogoInput">Home Logo</label>
+          <input type="file" id="homeLogoInput" accept="image/*" />
+        </div>
+
+        <div class="score-preview">
+          <span id="homePreviewName">Home</span>
+          <strong id="homePreviewScore">0</strong>
+        </div>
+
+        <div class="score-buttons">
+          <button class="score-btn try-btn" onclick="addScore('home', 5)">Try +5</button>
+          <button class="score-btn conv-btn" onclick="addScore('home', 2)">Conversion +2</button>
+          <button class="score-btn pen-btn" onclick="addScore('home', 3)">Penalty +3</button>
+          <button class="score-btn drop-btn" onclick="addScore('home', 3)">Drop Goal +3</button>
+        </div>
+      </div>
+
+      <div class="team-card away-card">
+        <h2>Away Team</h2>
+
+        <div class="field-group">
+          <label for="awayColorInput">Away Color</label>
+          <input type="color" id="awayColorInput" value="#dc2626" />
+        </div>
+
+        <div class="field-group">
+          <label for="awayLogoInput">Away Logo</label>
+          <input type="file" id="awayLogoInput" accept="image/*" />
+        </div>
+
+        <div class="score-preview">
+          <span id="awayPreviewName">Away</span>
+          <strong id="awayPreviewScore">0</strong>
+        </div>
+
+        <div class="score-buttons">
+          <button class="score-btn try-btn" onclick="addScore('away', 5)">Try +5</button>
+          <button class="score-btn conv-btn" onclick="addScore('away', 2)">Conversion +2</button>
+          <button class="score-btn pen-btn" onclick="addScore('away', 3)">Penalty +3</button>
+          <button class="score-btn drop-btn" onclick="addScore('away', 3)">Drop Goal +3</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="timer-card">
+      <h2>Live Match Clock</h2>
+      <div class="timer-display" id="timerPreview">20:00</div>
+      <div class="period-display" id="periodPreview">1st Half</div>
+    </section>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="admin.js?v=5"></script>
+</body>
+</html>

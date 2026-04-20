@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #050505;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.display-wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at center, #111 0%, #080808 45%, #030303 100%);
+}
+
+.top-strip {
+  display: grid;
+  grid-template-columns: 1fr 520px 1fr;
+  align-items: stretch;
+  min-height: 180px;
+}
+
+.team-bar {
+  min-height: 100%;
+}
+
+.home-bar {
+  background: #2563eb;
+}
+
+.away-bar {
+  background: #dc2626;
+}
+
+.match-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #111111;
+  border-left: 4px solid #000;
+  border-right: 4px solid #000;
+}
+
+.match-label {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  color: #d1d5db;
+}
+
+.timer {
+  font-size: 100px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+.period {
+  margin-top: 12px;
+  font-size: 34px;
+  color: #d1d5db;
+}
+
+.scoreboard-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 180px 1fr;
+  align-items: center;
+  padding: 30px 40px 40px;
+  gap: 20px;
+}
+
+.team-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-box {
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: none;
+  padding: 14px;
+}
+
+.logo-placeholder {
+  font-size: 24px;
+  color: #888;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.team-name {
+  font-size: 56px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+
+.huge-score {
+  font-size: 260px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
+}
+
+.center-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vs-badge {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: #1f2937;
+  border: 4px solid #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: bold;
+  color: #f9fafb;
+}
