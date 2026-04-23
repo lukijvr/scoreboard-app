@@ -7,10 +7,10 @@ let currentData = {
   awayScore: 0,
   timer: "20:00",
   period: "1st Half",
-  homeColor: "#2563eb",
-  awayColor: "#dc2626",
-  homeLogo: "",
-  awayLogo: ""
+  homeLogo: "/assets/logos/home.png",
+  awayLogo: "/assets/logos/away.png",
+  homeColor: "#1d4ed8",
+  awayColor: "#dc2626"
 };
 
 let countdownInterval = null;
@@ -22,68 +22,101 @@ socket.on("connect", () => {
 
 socket.on("scoreboardUpdate", (data) => {
   console.log("Received scoreboard update:", data);
-  currentData = data;
+  currentData = { ...currentData, ...data };
   updateAdminPreview();
-  syncFormFields();
 });
 
 function updateAdminPreview() {
-  const homeNameEl = document.getElementById("homePreviewName");
-  const awayNameEl = document.getElementById("awayPreviewName");
-  const homeScoreEl = document.getElementById("homePreviewScore");
-  const awayScoreEl = document.getElementById("awayPreviewScore");
-  const timerEl = document.getElementById("timerPreview");
-  const periodEl = document.getElementById("periodPreview");
+  const homePreviewName = document.getElementById("homePreviewName");
+  const awayPreviewName = document.getElementById("awayPreviewName");
+  const homePreviewScore = document.getElementById("homePreviewScore");
+  const awayPreviewScore = document.getElementById("awayPreviewScore");
+  const timerPreview = document.getElementById("timerPreview");
+  const periodPreview = document.getElementById("periodPreview");
 
-  if (homeNameEl) homeNameEl.textContent = currentData.homeTeam;
-  if (awayNameEl) awayNameEl.textContent = currentData.awayTeam;
-  if (homeScoreEl) homeScoreEl.textContent = currentData.homeScore;
-  if (awayScoreEl) awayScoreEl.textContent = currentData.awayScore;
-  if (timerEl) timerEl.textContent = currentData.timer;
-  if (periodEl) periodEl.textContent = currentData.period;
-}
-
-function syncFormFields() {
-  const homeColorInput = document.getElementById("homeColorInput");
-  const awayColorInput = document.getElementById("awayColorInput");
-
-  if (homeColorInput && currentData.homeColor) {
-    homeColorInput.value = currentData.homeColor;
+  if (homePreviewName) {
+    homePreviewName.textContent = currentData.homeTeam || "Home";
   }
 
-  if (awayColorInput && currentData.awayColor) {
-    awayColorInput.value = currentData.awayColor;
+  if (awayPreviewName) {
+    awayPreviewName.textContent = currentData.awayTeam || "Away";
   }
-}
 
-function emitUpdate() {
-  updateAdminPreview();
-  console.log("Sending updateScoreboard:", currentData);
-  socket.emit("updateScoreboard", currentData);
+  if (homePreviewScore) {
+    homePreviewScore.textContent = currentData.homeScore ?? 0;
+  }
+
+  if (awayPreviewScore) {
+    awayPreviewScore.textContent = currentData.awayScore ?? 0;
+  }
+
+  if (timerPreview) {
+    timerPreview.textContent = currentData.timer || "20:00";
+  }
+
+  if (periodPreview) {
+    periodPreview.textContent = currentData.period || "1st Half";
+  }
 }
 
 function addScore(team, points) {
+  console.log("Button clicked:", team, points);
+
   if (team === "home") {
     currentData.homeScore += points;
   } else {
     currentData.awayScore += points;
   }
 
-  emitUpdate();
+  updateAdminPreview();
+  console.log("Sending updateScoreboard:", currentData);
+  socket.emit("updateScoreboard", currentData);
+
+  if (points === 5) {
+    socket.emit("triggerCelebration", {
+      text: "TRY!",
+      duration: 3000,
+      color:
+        team === "home"
+          ? currentData.homeColor || "#1d4ed8"
+          : currentData.awayColor || "#dc2626"
+    });
+  }
 }
 
 function updateNames() {
-  currentData.homeTeam = document.getElementById("homeTeamInput").value;
-  currentData.awayTeam = document.getElementById("awayTeamInput").value;
-  currentData.period = document.getElementById("periodInput").value;
-  currentData.homeColor = document.getElementById("homeColorInput").value;
-  currentData.awayColor = document.getElementById("awayColorInput").value;
+  const homeTeamInput = document.getElementById("homeTeamInput");
+  const awayTeamInput = document.getElementById("awayTeamInput");
+  const periodInput = document.getElementById("periodInput");
+  const timerInput = document.getElementById("timerInput");
 
-  emitUpdate();
+  if (homeTeamInput) {
+    currentData.homeTeam = homeTeamInput.value || "Home";
+  }
+
+  if (awayTeamInput) {
+    currentData.awayTeam = awayTeamInput.value || "Away";
+  }
+
+  if (periodInput) {
+    currentData.period = periodInput.value || "1st Half";
+  }
+
+  if (timerInput && timerInput.value.trim()) {
+    currentData.timer = timerInput.value.trim();
+  }
+
+  updateAdminPreview();
+  console.log("Sending updateScoreboard:", currentData);
+  socket.emit("updateScoreboard", currentData);
 }
 
 function setTimer() {
-  const timeValue = document.getElementById("timerInput").value.trim();
+  const timerInput = document.getElementById("timerInput");
+
+  if (!timerInput) return;
+
+  const timeValue = timerInput.value.trim();
   const parts = timeValue.split(":");
 
   if (parts.length !== 2) {
@@ -94,7 +127,13 @@ function setTimer() {
   const minutes = parseInt(parts[0], 10);
   const seconds = parseInt(parts[1], 10);
 
-  if (isNaN(minutes) || isNaN(seconds) || seconds > 59 || minutes < 0 || seconds < 0) {
+  if (
+    Number.isNaN(minutes) ||
+    Number.isNaN(seconds) ||
+    minutes < 0 ||
+    seconds < 0 ||
+    seconds > 59
+  ) {
     alert("Invalid time format. Use mm:ss");
     return;
   }
@@ -102,16 +141,22 @@ function setTimer() {
   remainingSeconds = minutes * 60 + seconds;
   currentData.timer = formatTime(remainingSeconds);
 
-  emitUpdate();
+  updateAdminPreview();
+  console.log("Sending updateScoreboard:", currentData);
+  socket.emit("updateScoreboard", currentData);
 }
 
 function startGame() {
   if (countdownInterval) return;
 
-  const timeValue = document.getElementById("timerInput").value.trim();
-  const parts = timeValue.split(":");
+  const timerInput = document.getElementById("timerInput");
 
   if (remainingSeconds <= 0) {
+    if (!timerInput) return;
+
+    const timeValue = timerInput.value.trim();
+    const parts = timeValue.split(":");
+
     if (parts.length !== 2) {
       alert("Please use mm:ss format, for example 20:00");
       return;
@@ -120,7 +165,13 @@ function startGame() {
     const minutes = parseInt(parts[0], 10);
     const seconds = parseInt(parts[1], 10);
 
-    if (isNaN(minutes) || isNaN(seconds) || seconds > 59 || minutes < 0 || seconds < 0) {
+    if (
+      Number.isNaN(minutes) ||
+      Number.isNaN(seconds) ||
+      minutes < 0 ||
+      seconds < 0 ||
+      seconds > 59
+    ) {
       alert("Invalid time format. Use mm:ss");
       return;
     }
@@ -129,18 +180,21 @@ function startGame() {
   }
 
   currentData.timer = formatTime(remainingSeconds);
-  emitUpdate();
+  updateAdminPreview();
+  socket.emit("updateScoreboard", currentData);
 
   countdownInterval = setInterval(() => {
     if (remainingSeconds > 0) {
       remainingSeconds--;
       currentData.timer = formatTime(remainingSeconds);
-      emitUpdate();
+      updateAdminPreview();
+      socket.emit("updateScoreboard", currentData);
     } else {
       clearInterval(countdownInterval);
       countdownInterval = null;
       currentData.timer = "00:00";
-      emitUpdate();
+      updateAdminPreview();
+      socket.emit("updateScoreboard", currentData);
       alert("Game over");
     }
   }, 1000);
@@ -155,47 +209,36 @@ function stopGame() {
 
 function resetScores() {
   stopGame();
+
   currentData.homeScore = 0;
   currentData.awayScore = 0;
   currentData.timer = "20:00";
+  currentData.period = "1st Half";
+
   remainingSeconds = 20 * 60;
-  document.getElementById("timerInput").value = "20:00";
-  emitUpdate();
+
+  const timerInput = document.getElementById("timerInput");
+  const periodInput = document.getElementById("periodInput");
+
+  if (timerInput) {
+    timerInput.value = "20:00";
+  }
+
+  if (periodInput) {
+    periodInput.value = "1st Half";
+  }
+
+  updateAdminPreview();
+  console.log("Sending updateScoreboard:", currentData);
+  socket.emit("updateScoreboard", currentData);
 }
 
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
+
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
-
-function fileToDataUrl(file, callback) {
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    callback(event.target.result);
-  };
-  reader.readAsDataURL(file);
-}
-
-document.getElementById("homeLogoInput").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  fileToDataUrl(file, (dataUrl) => {
-    currentData.homeLogo = dataUrl;
-    emitUpdate();
-  });
-});
-
-document.getElementById("awayLogoInput").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  fileToDataUrl(file, (dataUrl) => {
-    currentData.awayLogo = dataUrl;
-    emitUpdate();
-  });
-});
 
 window.addScore = addScore;
 window.updateNames = updateNames;

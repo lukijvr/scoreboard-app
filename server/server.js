@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json());
 
 let scoreboard = {
   homeTeam: "Home",
@@ -17,10 +17,10 @@ let scoreboard = {
   awayScore: 0,
   timer: "20:00",
   period: "1st Half",
-  homeColor: "#2563eb",
-  awayColor: "#dc2626",
-  homeLogo: "",
-  awayLogo: ""
+  homeLogo: "/assets/logos/home.png",
+  awayLogo: "/assets/logos/away.png",
+  homeColor: "#1d4ed8",
+  awayColor: "#dc2626"
 };
 
 io.on("connection", (socket) => {
@@ -32,6 +32,11 @@ io.on("connection", (socket) => {
     console.log("updateScoreboard received:", data);
     scoreboard = { ...scoreboard, ...data };
     io.emit("scoreboardUpdate", scoreboard);
+  });
+
+  socket.on("triggerCelebration", (data) => {
+    console.log("triggerCelebration received:", data);
+    io.emit("showCelebration", data);
   });
 
   socket.on("disconnect", () => {

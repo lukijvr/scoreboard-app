@@ -3,48 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scoreboard Display</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>LED Scoreboard Display</title>
   <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="style.css?v=11" />
 </head>
 <body>
-  <div class="display-wrap">
-    <div class="top-strip">
-      <div class="team-bar home-bar" id="homeBar"></div>
-      <div class="match-center">
-        <div class="match-label">LIVE SCOREBOARD</div>
-        <div class="timer" id="timer">20:00</div>
-        <div class="period" id="period">1st Half</div>
-      </div>
-      <div class="team-bar away-bar" id="awayBar"></div>
+  <div class="scoreboard-grid">
+    <div class="panel logo-panel home-panel">
+      <img id="homeLogo" src="/assets/logos/home.png" alt="Home Logo" class="team-logo" />
     </div>
 
-    <div class="scoreboard-main">
-      <div class="team-panel">
-        <div class="logo-box">
-          <img id="homeLogo" alt="Home Logo" />
-          <div class="logo-placeholder" id="homeLogoPlaceholder">HOME LOGO</div>
-        </div>
-        <div class="team-name" id="homeTeam">Home</div>
-        <div class="score huge-score" id="homeScore">0</div>
-      </div>
+    <div class="panel timer-panel">
+      <div id="timer" class="timer-text">20:00</div>
+      <div id="period" class="period-text">1ST HALF</div>
+    </div>
 
-      <div class="center-divider">
-        <div class="vs-badge">VS</div>
-      </div>
+    <div class="panel logo-panel away-panel">
+      <img id="awayLogo" src="/assets/logos/away.png" alt="Away Logo" class="team-logo" />
+    </div>
 
-      <div class="team-panel">
-        <div class="logo-box">
-          <img id="awayLogo" alt="Away Logo" />
-          <div class="logo-placeholder" id="awayLogoPlaceholder">AWAY LOGO</div>
-        </div>
-        <div class="team-name" id="awayTeam">Away</div>
-        <div class="score huge-score" id="awayScore">0</div>
-      </div>
+    <div class="panel name-panel home-panel">
+      <div id="homeTeam" class="team-name">HOME</div>
+    </div>
+
+    <div class="panel vs-panel">
+      <div class="vs-text">VS</div>
+    </div>
+
+    <div class="panel name-panel away-panel">
+      <div id="awayTeam" class="team-name">AWAY</div>
+    </div>
+
+    <div class="panel score-panel home-panel">
+      <div id="homeScore" class="score-text">00</div>
+    </div>
+
+    <div class="panel divider-panel">
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="panel score-panel away-panel">
+      <div id="awayScore" class="score-text">00</div>
+    </div>
+  </div>
+
+  <!-- Celebration Overlay -->
+  <div id="celebrationOverlay" class="celebration-overlay hidden">
+    <div id="celebrationText" class="celebration-text">TRY!</div>
+    <div class="fireworks">
+      <span class="burst burst-1"></span>
+      <span class="burst burst-2"></span>
+      <span class="burst burst-3"></span>
+      <span class="burst burst-4"></span>
+      <span class="burst burst-5"></span>
+      <span class="burst burst-6"></span>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=11"></script>
 </body>
 </html>
